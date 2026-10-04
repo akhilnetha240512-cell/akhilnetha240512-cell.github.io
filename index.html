@@ -515,16 +515,28 @@ function copyCode(){
   });
 }
 </script>
+  <!-- FIREBASE + AUTHENTICATION -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
   import {
-    getFirestore,
-    collection,
-    getDocs
+    getFirestore
   } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+  // Firebase configuration
   const firebaseConfig = {
-    apiKey: "AIzaSyComsLAcTISwLWB00WxaaRg3nmyCdZlcYw",
+    apiKey: "AIzaSyComsLAcTISsLWB00WxaaRg3nmyCdZlcYw",
     authDomain: "study-companion-app-70518.firebaseapp.com",
     projectId: "study-companion-app-70518",
     storageBucket: "study-companion-app-70518.firebasestorage.app",
@@ -532,150 +544,148 @@ function copyCode(){
     appId: "1:1045381685642:web:49db0fae837cacc46b6873"
   };
 
-  // Initialize Firebase
+
+  // Start Firebase
   const app = initializeApp(firebaseConfig);
 
-  // Initialize Firestore
+  // Firestore
   const db = getFirestore(app);
+
+  // Authentication
+  const auth = getAuth(app);
+
+
+  // Make Firebase available to the rest of the website
+  window.studyAuth = {
+    auth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  };
+
+  window.studyDB = db;
+
 
   console.log("✅ Firebase connected!");
   console.log("✅ Firestore connected!");
-</script>
-  <div id="authScreen" style="
-  display:none;
-  min-height:100vh;
-  padding:30px 20px;
-  align-items:center;
-  justify-content:center;
-  background:#f5f1e8;
-">
+  console.log("✅ Authentication connected!");
 
-  <div style="
-    width:100%;
-    max-width:420px;
-    background:white;
-    padding:28px;
-    border-radius:20px;
-    box-shadow:0 10px 35px rgba(0,0,0,.12);
-  ">
 
-    <h1 style="margin-top:0;">Study Companion</h1>
-    <p id="authTitle">Student Login</p>
-
-    <input
-      id="email"
-      type="email"
-      placeholder="Email"
-      style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;box-sizing:border-box;"
-    >
-
-    <input
-      id="password"
-      type="password"
-      placeholder="Password"
-      style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;box-sizing:border-box;"
-    >
-
-    <button id="loginBtn" style="
-      width:100%;
-      padding:14px;
-      margin-top:10px;
-      border:0;
-      border-radius:10px;
-      background:#111;
-      color:white;
-      font-size:16px;
-    ">
-      Login
-    </button>
-
-    <button id="signupBtn" style="
-      width:100%;
-      padding:14px;
-      margin-top:10px;
-      border:1px solid #111;
-      border-radius:10px;
-      background:white;
-      font-size:16px;
-    ">
-      Create Account
-    </button>
-
-    <p id="authMessage" style="margin-top:15px;"></p>
-
-  </div>
-  </div>
-  <script type="module">
-
-  const auth = window.studyAuth.auth;
-  const login = window.studyAuth.signInWithEmailAndPassword;
-  const signup = window.studyAuth.createUserWithEmailAndPassword;
-  const listen = window.studyAuth.onAuthStateChanged;
-  const logout = window.studyAuth.signOut;
-
+  // Login screen
   const authScreen = document.getElementById("authScreen");
+
   const loginBtn = document.getElementById("loginBtn");
   const signupBtn = document.getElementById("signupBtn");
+
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
+
   const message = document.getElementById("authMessage");
+
 
   function showMessage(text) {
     message.textContent = text;
   }
 
+
+  // LOGIN
   loginBtn.addEventListener("click", async () => {
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
     if (!email || !password) {
-      showMessage("Please enter email and password.");
+      showMessage("Please enter your email and password.");
       return;
     }
 
     try {
-      await login(auth, email, password);
+
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       showMessage("Login successful!");
+
     } catch (error) {
-      showMessage(error.message);
+
+      console.error(error);
+
+      showMessage(
+        "Login failed: " + error.message
+      );
+
     }
 
   });
 
+
+  // CREATE ACCOUNT
   signupBtn.addEventListener("click", async () => {
 
     const email = emailInput.value.trim();
     const password = passwordInput.value;
 
     if (!email || !password) {
-      showMessage("Please enter email and password.");
+      showMessage("Please enter your email and password.");
+      return;
+    }
+
+    if (password.length < 6) {
+      showMessage("Password must be at least 6 characters.");
       return;
     }
 
     try {
-      await signup(auth, email, password);
-      showMessage("Account created!");
+
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      showMessage("Account created successfully!");
+
     } catch (error) {
-      showMessage(error.message);
+
+      console.error(error);
+
+      showMessage(
+        "Account creation failed: " + error.message
+      );
+
     }
 
   });
 
-  listen(auth, (user) => {
+
+  // CHECK LOGIN STATUS
+  onAuthStateChanged(auth, (user) => {
 
     if (user) {
+
+      console.log("👤 Logged in:", user.email);
+      console.log("🆔 User ID:", user.uid);
+
+      // Hide login screen
       authScreen.style.display = "none";
 
-      console.log("Logged in:", user.email);
-      console.log("User ID:", user.uid);
-
     } else {
+
+      // Show login screen
       authScreen.style.display = "flex";
+
     }
 
   });
 
-  </script>
+</script>
+
+</body>
+</html>
+      
 </body>
 </html>
