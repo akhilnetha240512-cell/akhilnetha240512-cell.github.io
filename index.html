@@ -541,5 +541,141 @@ function copyCode(){
   console.log("✅ Firebase connected!");
   console.log("✅ Firestore connected!");
 </script>
+  <div id="authScreen" style="
+  display:none;
+  min-height:100vh;
+  padding:30px 20px;
+  align-items:center;
+  justify-content:center;
+  background:#f5f1e8;
+">
+
+  <div style="
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
+  ">
+
+    <h1 style="margin-top:0;">Study Companion</h1>
+    <p id="authTitle">Student Login</p>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Email"
+      style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;box-sizing:border-box;"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      style="width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ccc;box-sizing:border-box;"
+    >
+
+    <button id="loginBtn" style="
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:0;
+      border-radius:10px;
+      background:#111;
+      color:white;
+      font-size:16px;
+    ">
+      Login
+    </button>
+
+    <button id="signupBtn" style="
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:1px solid #111;
+      border-radius:10px;
+      background:white;
+      font-size:16px;
+    ">
+      Create Account
+    </button>
+
+    <p id="authMessage" style="margin-top:15px;"></p>
+
+  </div>
+  </div>
+  <script type="module">
+
+  const auth = window.studyAuth.auth;
+  const login = window.studyAuth.signInWithEmailAndPassword;
+  const signup = window.studyAuth.createUserWithEmailAndPassword;
+  const listen = window.studyAuth.onAuthStateChanged;
+  const logout = window.studyAuth.signOut;
+
+  const authScreen = document.getElementById("authScreen");
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const message = document.getElementById("authMessage");
+
+  function showMessage(text) {
+    message.textContent = text;
+  }
+
+  loginBtn.addEventListener("click", async () => {
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      showMessage("Please enter email and password.");
+      return;
+    }
+
+    try {
+      await login(auth, email, password);
+      showMessage("Login successful!");
+    } catch (error) {
+      showMessage(error.message);
+    }
+
+  });
+
+  signupBtn.addEventListener("click", async () => {
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      showMessage("Please enter email and password.");
+      return;
+    }
+
+    try {
+      await signup(auth, email, password);
+      showMessage("Account created!");
+    } catch (error) {
+      showMessage(error.message);
+    }
+
+  });
+
+  listen(auth, (user) => {
+
+    if (user) {
+      authScreen.style.display = "none";
+
+      console.log("Logged in:", user.email);
+      console.log("User ID:", user.uid);
+
+    } else {
+      authScreen.style.display = "flex";
+    }
+
+  });
+
+  </script>
 </body>
 </html>
