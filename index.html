@@ -515,5 +515,31 @@ function copyCode(){
   });
 }
 </script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyComsLAcTISwLWB00WxaaRg3nmyCdZlcYw",
+    authDomain: "study-companion-app-70518.firebaseapp.com",
+    projectId: "study-companion-app-70518",
+    storageBucket: "study-companion-app-70518.firebasestorage.app",
+    messagingSenderId: "1045381685642",
+    appId: "1:1045381685642:web:49db0fae837cacc46b6873"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // Initialize Firestore
+  const db = getFirestore(app);
+
+  console.log("✅ Firebase connected!");
+  console.log("✅ Firestore connected!");
+</script>
 </body>
 </html>
