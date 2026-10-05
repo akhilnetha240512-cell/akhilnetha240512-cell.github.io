@@ -500,6 +500,85 @@
     <a href="https://github.com/akhilnetha240512-cell/study-companion-app">View on GitHub</a>
   </footer>
 </div>
+  <!-- LOGIN SCREEN -->
+<div id="authScreen" style="
+  display:flex;
+  min-height:100vh;
+  padding:30px 20px;
+  align-items:center;
+  justify-content:center;
+  background:#f5f1e8;
+">
+
+  <div style="
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:28px;
+    border-radius:20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
+  ">
+
+    <h2 style="margin-top:0;">Study Companion</h2>
+
+    <p>Student Login</p>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Email"
+      style="
+        width:100%;
+        padding:14px;
+        margin:8px 0;
+        border-radius:10px;
+        border:1px solid #ccc;
+      "
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      style="
+        width:100%;
+        padding:14px;
+        margin:8px 0;
+        border-radius:10px;
+        border:1px solid #ccc;
+      "
+    >
+
+    <button id="loginBtn" style="
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:0;
+      border-radius:10px;
+      background:#2C3E70;
+      color:white;
+      font-size:16px;
+    ">
+      Login
+    </button>
+
+    <button id="signupBtn" style="
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:1px solid #2C3E70;
+      border-radius:10px;
+      background:white;
+      color:#2C3E70;
+      font-size:16px;
+    ">
+      Create Account
+    </button>
+
+    <p id="authMessage"></p>
+
+  </div>
+</div>
 
 <script>
 function copyCode(){
@@ -683,9 +762,6 @@ function copyCode(){
   });
 
 </script>
-
-</body>
-</html>
-      
+  
 </body>
 </html>
