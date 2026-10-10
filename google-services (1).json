@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1045381685642",
+    "firebase_url": "https://study-companion-app-70518-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "study-companion-app-70518",
+    "storage_bucket": "study-companion-app-70518.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045381685642:android:22e00b3e1200dff06b6873",
+        "android_client_info": {
+          "package_name": "com.akhilnetha.studycompanion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045381685642-po79cvtqthhgio2ku9vs9qhidn51b34a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvEiTBqwG69hSvAFYnYh887Bm0h8tzGQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045381685642-po79cvtqthhgio2ku9vs9qhidn51b34a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
