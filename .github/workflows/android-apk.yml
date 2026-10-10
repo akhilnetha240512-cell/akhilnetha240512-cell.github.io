@@ -1,4 +1,3 @@
-
 name: Build Study Companion APK
 
 on:
@@ -7,6 +6,7 @@ on:
     paths:
       - "package.json"
       - "capacitor.config.json"
+      - "android-icons.zip"
       - ".github/workflows/android-apk.yml"
 
 permissions:
@@ -35,13 +35,21 @@ jobs:
       - name: Install Capacitor
         run: npm install
 
-      - name: Prepare local web directory
+      - name: Prepare web directory
         run: |
           mkdir -p www
-          printf '%s\n' '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>Opening Study Companion...</body></html>' > www/index.html
+          printf '%s\n' \
+            '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>Opening Study Companion...</body></html>' \
+            > www/index.html
 
       - name: Create Android project
         run: npx cap add android
+
+      - name: Install open-book app icons
+        run: |
+          test -f android-icons.zip
+          unzip -o android-icons.zip -d /tmp/study-icons
+          cp -R /tmp/study-icons/res/. android/app/src/main/res/
 
       - name: Sync Capacitor
         run: npx cap sync android
