@@ -55,10 +55,16 @@ jobs:
         run: npx cap sync android
 
       - name: Build APK
-        working-directory: android
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+    working-directory: android
+    run: |
+      chmod +x gradlew
+      ./gradlew assembleDebug
+      echo "=== DEBUG CERTIFICATE SHA-1 ==="
+      keytool -list -v \
+        -keystore "$HOME/.android/debug.keystore" \
+        -alias androiddebugkey \
+        -storepass android \
+        -keypass android | grep -E "SHA1:|SHA256:"
 
       - name: Save APK artifact
         uses: actions/upload-artifact@v4
