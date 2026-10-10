@@ -14,9 +14,11 @@ permissions:
 
 jobs:
   build:
+    name: Build Android APK
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Download repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -30,27 +32,27 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - name: Install dependencies
+      - name: Install Capacitor
         run: npm install
 
-      - name: Prepare web folder
+      - name: Prepare local web directory
         run: |
           mkdir -p www
-          echo '<!doctype html><html><head><meta charset="utf-8"><title>Study Companion</title></head><body>Study Companion</body></html>' > www/index.html
+          printf '%s\n' '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>Opening Study Companion...</body></html>' > www/index.html
 
       - name: Create Android project
         run: npx cap add android
 
-      - name: Sync Android project
+      - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Build debug APK
+      - name: Build APK
         working-directory: android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Save APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: study-companion-debug-apk
