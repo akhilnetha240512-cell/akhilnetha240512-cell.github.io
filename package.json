@@ -1,17 +1,18 @@
-
 {
-  "name": "study-companion-android",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Android build for Study Companion",
-  "scripts": {
-    "android:sync": "cap sync android"
-  },
-  "dependencies": {
-    "@capacitor/android": "^7.4.3",
-    "@capacitor/core": "^7.4.3"
-  },
-  "devDependencies": {
-    "@capacitor/cli": "^7.4.3"
-  }
+"name": "study-companion-android",
+"version": "1.0.0",
+"private": true,
+"description": "Android build for Study Companion",
+"scripts": {
+"android:sync": "cap sync android"
+},
+"dependencies": {
+"@capacitor/android": "^7.4.3",
+"@capacitor/core": "^7.4.3",
+"@capacitor-firebase/authentication": "7.3.1",
+"firebase": "^11.2.0"
+},
+"devDependencies": {
+"@capacitor/cli": "^7.4.3"
+}
 }
