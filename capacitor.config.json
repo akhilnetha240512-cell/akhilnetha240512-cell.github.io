@@ -1,0 +1,17 @@
+
+{
+  "appId": "com.akhilnetha.studycompanion",
+  "appName": "Study Companion",
+  "webDir": "www",
+  "server": {
+    "url": "https://akhilnetha240512-cell.github.io/study-companion-app/",
+    "cleartext": false,
+    "allowNavigation": [
+      "akhilnetha240512-cell.github.io",
+      "*.firebaseapp.com",
+      "*.google.com",
+      "*.googleapis.com",
+      "drive.google.com"
+    ]
+  }
+}
