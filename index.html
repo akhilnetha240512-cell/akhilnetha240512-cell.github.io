@@ -2649,5 +2649,220 @@ if ('serviceWorker' in navigator) {
   }
 </script>
 
+
+<!-- Study Companion: Saved Chats and Voice Features -->
+<div id="scExtraTools" style="padding:12px;margin:12px 0;border-radius:12px;background:#f1f5f9;color:#172033">
+  <label for="scSavedChats"><b>Saved chats</b></label>
+  <select id="scSavedChats" style="width:100%;padding:10px;margin:8px 0">
+    <option value="">Select a saved chat</option>
+  </select>
+  <button id="scNewChat" type="button">+ New chat</button>
+  <button id="scVoice" type="button">🎙️ Voice typing</button>
+  <label for="scVoiceLanguage">Voice language</label>
+  <select id="scVoiceLanguage">
+    <option value="en-IN">English</option>
+    <option value="te-IN">Telugu</option>
+    <option value="hi-IN">Hindi</option>
+  </select>
+  <label style="display:block;margin-top:8px">
+    <input type="checkbox" id="scSpeakReplies"> Read answers aloud
+  </label>
+  <small id="scExtraStatus" style="display:block;margin-top:8px">Ready</small>
+</div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const messages = $('scMessages');
+  const question = $('scQuestion');
+  const send = $('scSend');
+  const picker = $('scSavedChats');
+  const status = $('scExtraStatus');
+
+  if (!messages || !question || !send) {
+    status.textContent =
+      'Chat controls were not found. Existing website code was not changed.';
+    return;
+  }
+
+  const KEY = 'studyCompanionSavedChatsV1';
+  let chats = [];
+  let active = null;
+  let recognition = null;
+
+  try {
+    chats = JSON.parse(localStorage.getItem(KEY) || '[]');
+    if (!Array.isArray(chats)) chats = [];
+  } catch (_) {
+    chats = [];
+  }
+
+  chats = chats.slice(0, 5);
+
+  function save() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(chats.slice(0, 5)));
+    } catch (_) {
+      status.textContent = 'Unable to save chats in this browser.';
+    }
+  }
+
+  function refresh() {
+    picker.replaceChildren();
+    const first = document.createElement('option');
+    first.value = '';
+    first.textContent = 'Select a saved chat';
+    picker.appendChild(first);
+
+    chats.forEach(chat => {
+      const option = document.createElement('option');
+      option.value = chat.id;
+      option.textContent = chat.name;
+      picker.appendChild(option);
+    });
+
+    picker.value = active || '';
+  }
+
+  function snapshot() {
+    if (!active) return;
+    const chat = chats.find(item => item.id === active);
+    if (!chat) return;
+    chat.html = messages.innerHTML;
+    save();
+  }
+
+  function newChat() {
+    snapshot();
+    active = 'chat-' + Date.now();
+    chats.unshift({
+      id: active,
+      name: 'Chat ' + new Date().toLocaleTimeString(),
+      html: ''
+    });
+    chats = chats.slice(0, 5);
+    messages.replaceChildren();
+    refresh();
+    save();
+    status.textContent = 'New chat created.';
+  }
+
+  $('scNewChat').addEventListener('click', newChat);
+
+  picker.addEventListener('change', () => {
+    snapshot();
+    const chat = chats.find(item => item.id === picker.value);
+    if (!chat) return;
+    active = chat.id;
+    messages.innerHTML = chat.html || '';
+    refresh();
+    status.textContent = 'Saved chat opened.';
+  });
+
+  if (!active) {
+    if (chats.length) {
+      active = chats[0].id;
+      messages.innerHTML = chats[0].html || '';
+    } else {
+      active = 'chat-' + Date.now();
+      chats.unshift({ id: active, name: 'Chat 1', html: messages.innerHTML });
+      chats = chats.slice(0, 5);
+      save();
+    }
+  }
+  refresh();
+
+  // Save chat display after the existing Send button is used.
+  send.addEventListener('click', () => {
+    const text = question.value.trim();
+    const chat = chats.find(item => item.id === active);
+    if (chat && text && /^Chat \d+$/.test(chat.name)) {
+      chat.name = text.slice(0, 35);
+      refresh();
+    }
+    setTimeout(snapshot, 1200);
+    setTimeout(snapshot, 3500);
+  });
+
+  $('scVoice').addEventListener('click', () => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      status.textContent =
+        'Voice typing is not supported here. Try Chrome on Android.';
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = $('scVoiceLanguage').value;
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    recognition.onresult = event => {
+      let text = '';
+      for (let i = 0; i < event.results.length; i++) {
+        text += event.results[i][0].transcript;
+      }
+      question.value = text;
+    };
+    recognition.onerror = () => {
+      status.textContent = 'Voice input stopped. Please try again.';
+    };
+    recognition.onend = () => {
+      status.textContent = 'Voice input finished.';
+    };
+
+    status.textContent = 'Listening…';
+    try {
+      recognition.start();
+    } catch (_) {
+      status.textContent = 'Please tap Voice typing again.';
+    }
+  });
+
+  // Add a Listen button to newly displayed AI replies.
+  function addListenButtons() {
+    messages.querySelectorAll('.scListenReply').forEach(button => {
+      if (button.dataset.ready) return;
+      button.dataset.ready = '1';
+      button.addEventListener('click', () => {
+        if (!('speechSynthesis' in window)) {
+          status.textContent = 'Speech playback is not supported.';
+          return;
+        }
+        const text = button.parentElement.innerText
+          .replace(/Listen\s*$/i, '').trim();
+        if (!text) return;
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = $('scVoiceLanguage').value;
+        speechSynthesis.speak(utterance);
+      });
+    });
+  }
+
+  const observer = new MutationObserver(() => {
+    addListenButtons();
+    if ($('scSpeakReplies').checked &&
+        'speechSynthesis' in window) {
+      const latest = messages.lastElementChild;
+      if (latest && !latest.dataset.scSpoken) {
+        latest.dataset.scSpoken = '1';
+        const text = latest.innerText.trim();
+        if (text) {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = $('scVoiceLanguage').value;
+          speechSynthesis.speak(utterance);
+        }
+      }
+    }
+    snapshot();
+  });
+  observer.observe(messages, { childList: true, subtree: true });
+
+  status.textContent = 'Saved chats and voice tools are ready.';
+})();
+</script>
+<!-- End Study Companion extra tools -->
 </body>
 </html>
