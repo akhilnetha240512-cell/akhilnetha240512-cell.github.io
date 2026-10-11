@@ -365,22 +365,186 @@
     </div>
   </div>
 
-  <!-- SOLVER VIEW: ChatGPT web -->
+  <!-- SOLVER VIEW: Study Companion AI -->
   <div class="view" id="view-solver">
+
     <div style="padding:22px 18px 12px;">
-      <div class="eyebrow">Ask anything</div>
-      <h1 style="font-size:24px;margin:4px 0 0;">ChatGPT Solver</h1>
-      <p style="font-family:'Manrope',sans-serif;font-size:12.5px;color:var(--sub);line-height:1.5;margin:8px 0 0;">Opening the official ChatGPT website. Guest access may be available, but ChatGPT can still ask you to sign in.</p>
+      <div class="eyebrow">YOUR AI STUDY HELPER</div>
+      <h1 style="font-size:24px;margin:4px 0 0;">Study Companion AI 🤖</h1>
+      <p style="font-family:'Manrope',sans-serif;font-size:13px;color:var(--sub);line-height:1.5;margin:8px 0 0;">
+        Ask questions about Maths, Science, Social Studies, English, and more.
+      </p>
     </div>
-    <div style="padding:0 18px 10px;">
-      <a href="https://chatgpt.com/" target="_blank" rel="noopener" style="display:block;text-align:center;background:var(--ink);color:var(--cream);text-decoration:none;border-radius:12px;padding:12px 14px;font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;">Open ChatGPT in browser ↗</a>
-      <div id="chatgptStatus" style="font-family:'Manrope',sans-serif;font-size:12px;color:var(--sub);line-height:1.5;margin-top:8px;">If the embedded page is blank or sign-in does not work, use the browser button above.</div>
-    </div>
-    <div style="padding:0 12px 18px;">
-      <iframe id="chatgptFrame" title="ChatGPT website" src="about:blank" style="display:block;width:100%;height:calc(100vh - 260px);min-height:420px;border:1px solid var(--line);border-radius:12px;background:#fff;" allow="clipboard-read; clipboard-write; microphone; camera" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+    <div style="padding:0 14px 18px;">
+      <div id="scMessages"
+        role="log"
+        aria-live="polite"
+        style="height:calc(100vh - 350px);min-height:260px;overflow-y:auto;border:1px solid var(--line);border-radius:14px;padding:12px;background:var(--cream);">
+        <div style="padding:12px;background:var(--ink);color:var(--cream);border-radius:12px;margin-bottom:10px;line-height:1.6;font-size:14px;">
+          Hi! 👋 I'm your Study Companion AI. Ask me a question, and I'll help you understand it.
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <textarea
+          id="scQuestion"
+          placeholder="Type your question here..."
+          aria-label="Your question"
+          rows="2"
+          style="flex:1;min-width:0;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;font:14px 'Manrope',sans-serif;background:var(--cream);color:var(--ink);"
+        ></textarea>
+
+        <button
+          id="scSend"
+          type="button"
+          style="border:0;border-radius:12px;padding:0 17px;background:var(--ink);color:var(--cream);font:700 14px 'Manrope',sans-serif;"
+        >Send ↗</button>
+      </div>
+
+      <div id="scStatus"
+        role="status"
+        aria-live="polite"
+        style="font:12px 'Manrope',sans-serif;color:var(--sub);line-height:1.5;margin-top:8px;">
+        Ready to help. AI replies require an internet connection.
+      </div>
+
+      <button
+        id="scClear"
+        type="button"
+        style="margin-top:8px;border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:transparent;color:var(--ink);font:12px 'Manrope',sans-serif;"
+      >Clear chat</button>
     </div>
   </div>
   <!-- SOLVER VIEW END -->
+
+  <script>
+  (function () {
+    // IMPORTANT: Replace this with your real Cloudflare Worker URL.
+    const AI_WORKER_URL =
+      "PASTE_YOUR_CLOUDFLARE_WORKER_URL_HERE";
+
+    const messagesBox = document.getElementById("scMessages");
+    const questionBox = document.getElementById("scQuestion");
+    const sendButton = document.getElementById("scSend");
+    const clearButton = document.getElementById("scClear");
+    const statusBox = document.getElementById("scStatus");
+
+    if (!messagesBox || !questionBox || !sendButton ||
+        !clearButton || !statusBox) return;
+
+    const history = [];
+    let waiting = false;
+
+    function addBubble(text, isAI) {
+      const bubble = document.createElement("div");
+
+      bubble.style.cssText =
+        "white-space:pre-wrap;overflow-wrap:anywhere;" +
+        "padding:12px;border-radius:12px;margin-bottom:10px;" +
+        "line-height:1.6;font:14px 'Manrope',sans-serif;" +
+        (isAI
+          ? "background:var(--ink);color:var(--cream);"
+          : "background:#e5e7eb;color:#111827;");
+
+      bubble.textContent = (isAI ? "🤖 AI: " : "You: ") + text;
+      messagesBox.appendChild(bubble);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+    }
+
+    async function sendQuestion() {
+      const question = questionBox.value.trim();
+
+      if (!question || waiting) return;
+
+      if (
+        !AI_WORKER_URL.startsWith("https://") ||
+        AI_WORKER_URL.includes("PASTE_YOUR")
+      ) {
+        statusBox.textContent =
+          "Setup needed: add your Cloudflare Worker URL in the code first.";
+        return;
+      }
+
+      waiting = true;
+      sendButton.disabled = true;
+      questionBox.disabled = true;
+      sendButton.textContent = "…";
+
+      addBubble(question, false);
+      questionBox.value = "";
+      statusBox.textContent = "Thinking… please wait.";
+
+      history.push({ role: "user", content: question });
+
+      // Send only the latest 12 messages to the AI.
+      const messagesToSend = history.slice(-12);
+
+      try {
+        const response = await fetch(AI_WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: messagesToSend })
+        });
+
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          throw new Error("The server returned an unreadable response.");
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed (" + response.status + ").");
+        }
+
+        if (typeof data.reply !== "string" || !data.reply.trim()) {
+          throw new Error("The AI did not return an answer.");
+        }
+
+        history.push({ role: "assistant", content: data.reply });
+        addBubble(data.reply, true);
+        statusBox.textContent = "Answered! Ask another question whenever you're ready.";
+      } catch (error) {
+        // Remove the unanswered question from conversation history.
+        history.pop();
+
+        statusBox.textContent =
+          "Couldn't connect: " + error.message +
+          " Check your internet, Worker URL, AI binding, and usage limits.";
+      } finally {
+        waiting = false;
+        sendButton.disabled = false;
+        questionBox.disabled = false;
+        sendButton.textContent = "Send ↗";
+        questionBox.focus();
+      }
+    }
+
+    sendButton.addEventListener("click", sendQuestion);
+
+    questionBox.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendQuestion();
+      }
+    });
+
+    clearButton.addEventListener("click", function () {
+      if (waiting) return;
+
+      history.length = 0;
+      messagesBox.replaceChildren();
+
+      addBubble(
+        "Chat cleared! Ask me a new study question.",
+        true
+      );
+
+      statusBox.textContent = "Ready to help.";
+    });
+  })();
+  </script>
 
   <!-- STUDY VIEW (Timer + To-Do) -->
   <div class="view" id="view-study">
