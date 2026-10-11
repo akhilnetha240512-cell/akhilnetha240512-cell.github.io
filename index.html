@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Study Companion — for Android</title>
+<meta name="theme-color" content="#EDEFF0">
+<meta name="description" content="Study Companion for students. Track assignments, focus sessions, and study notes.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-
 :root{
   --paper:#EDEFF0;
   --paper-line:#DADDE0;
@@ -41,8 +42,7 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-button,
-input{
+button{
   font-family:inherit;
 }
 
@@ -52,100 +52,7 @@ input{
   padding:0 24px;
 }
 
-/* =========================
-   LOGIN SCREEN
-========================= */
-
-#authScreen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:30px 20px;
-  background:#f5f1e8;
-}
-
-.login-card{
-  width:100%;
-  max-width:420px;
-  background:white;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 10px 35px rgba(0,0,0,.12);
-}
-
-.login-card h2{
-  margin:0 0 8px;
-  font-family:'Fraunces',serif;
-  font-size:30px;
-}
-
-.login-card .login-subtitle{
-  color:var(--ink-soft);
-  margin:0 0 22px;
-}
-
-.login-input{
-  width:100%;
-  padding:14px;
-  margin:7px 0;
-  border-radius:10px;
-  border:1px solid #ccc;
-  font-size:16px;
-  outline:none;
-}
-
-.login-input:focus{
-  border-color:var(--navy);
-  box-shadow:0 0 0 3px rgba(44,62,112,.08);
-}
-
-.login-button{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  border-radius:10px;
-  font-size:16px;
-  cursor:pointer;
-  transition:.15s ease;
-}
-
-#loginBtn{
-  border:0;
-  background:var(--navy);
-  color:white;
-}
-
-#loginBtn:hover{
-  background:#243257;
-}
-
-#signupBtn{
-  border:1px solid var(--navy);
-  background:white;
-  color:var(--navy);
-}
-
-#signupBtn:hover{
-  background:#f3f5fa;
-}
-
-#authMessage{
-  min-height:22px;
-  margin:16px 0 0;
-  font-size:14px;
-  line-height:1.4;
-}
-
-/* =========================
-   APP / LANDING PAGE
-========================= */
-
-#appContent{
-  display:none;
-}
-
-/* faint ruled-paper texture */
+/* MAIN WEBSITE */
 
 .ruled{
   background-image:repeating-linear-gradient(
@@ -223,7 +130,8 @@ h1{
   margin:0 0 40px;
 }
 
-.download-card{
+.download-card,
+.visit-card{
   display:inline-flex;
   align-items:center;
   gap:18px;
@@ -231,16 +139,29 @@ h1{
   border:1px solid var(--paper-line);
   border-radius:6px;
   padding:18px 22px;
-  box-shadow:3px 4px 0 rgba(44,62,112,.08);
-  transform:rotate(-.6deg);
   text-decoration:none;
   color:var(--ink);
   transition:transform .15s ease,box-shadow .15s ease;
 }
 
+.download-card{
+  box-shadow:3px 4px 0 rgba(44,62,112,.08);
+  transform:rotate(-.6deg);
+}
+
 .download-card:hover{
   transform:rotate(-.6deg) translateY(-2px);
   box-shadow:4px 6px 0 rgba(44,62,112,.12);
+}
+
+.visit-card{
+  box-shadow:3px 4px 0 rgba(127,169,139,.15);
+  transform:rotate(.5deg);
+  margin-top:16px;
+}
+
+.visit-card:hover{
+  transform:rotate(.5deg) translateY(-2px);
 }
 
 .download-icon{
@@ -254,20 +175,28 @@ h1{
   flex-shrink:0;
 }
 
+.visit-card .download-icon{
+  background:var(--sage-dark);
+}
+
 .download-text .title{
+  display:block;
   font-weight:600;
   font-size:16px;
 }
 
 .download-text .meta{
+  display:block;
   font-family:'IBM Plex Mono',monospace;
   font-size:12px;
   color:var(--ink-soft);
-  margin-top:3px;
+  margin-top:5px;
+  overflow-wrap:anywhere;
 }
 
 .note{
   font-size:13px;
+  line-height:1.5;
   color:var(--ink-soft);
   margin-top:14px;
   max-width:46ch;
@@ -314,19 +243,13 @@ h1{
   padding:10px 12px;
 }
 
-.warning{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:12px;
-  color:#B23A3A;
-  margin-top:10px;
-}
-
 .code-row code{
   font-family:'IBM Plex Mono',monospace;
   font-size:13px;
   color:var(--ink);
   word-break:break-all;
   flex:1;
+  min-width:0;
 }
 
 .copy-btn{
@@ -337,12 +260,24 @@ h1{
   color:#fff;
   border:none;
   border-radius:4px;
-  padding:7px 12px;
+  padding:9px 12px;
   cursor:pointer;
+}
+
+.copy-btn:hover{
+  background:#243257;
 }
 
 .copy-btn.copied{
   background:var(--sage-dark);
+}
+
+.warning{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12px;
+  line-height:1.5;
+  color:#B23A3A;
+  margin-top:10px;
 }
 
 .credit-box{
@@ -380,29 +315,12 @@ h1{
   font-weight:500;
 }
 
-.visit-card{
-  display:inline-flex;
-  align-items:center;
-  gap:18px;
-  background:var(--card);
-  border:1px solid var(--paper-line);
-  border-radius:6px;
-  padding:18px 22px;
-  box-shadow:3px 4px 0 rgba(127,169,139,.15);
-  transform:rotate(.5deg);
-  text-decoration:none;
-  color:var(--ink);
-  transition:transform .15s ease,box-shadow .15s ease;
-  margin-top:16px;
+.credit-box a:hover,
+footer a:hover{
+  text-decoration:underline;
 }
 
-.visit-card:hover{
-  transform:rotate(.5deg) translateY(-2px);
-}
-
-.visit-card .download-icon{
-  background:var(--sage-dark);
-}
+/* FEATURES */
 
 section.features{
   padding:48px 0 64px;
@@ -461,6 +379,8 @@ section.features{
   max-width:56ch;
 }
 
+/* FOOTER */
+
 footer{
   padding:32px 0 56px;
   border-top:1px solid var(--paper-line);
@@ -478,83 +398,57 @@ footer a{
 }
 
 @media(max-width:560px){
+  .wrap{
+    padding:0 20px;
+  }
+
+  header.hero{
+    padding-top:48px;
+    padding-bottom:40px;
+  }
 
   .download-card,
   .visit-card{
     width:100%;
+    padding:15px;
+    gap:12px;
   }
 
-  .login-card{
-    padding:24px;
+  .download-text .meta{
+    font-size:11px;
   }
 
+  .code-row{
+    align-items:flex-start;
+  }
+
+  .copy-btn{
+    padding:9px;
+  }
 }
 
+@media(prefers-reduced-motion:reduce){
+  html{
+    scroll-behavior:auto;
+  }
+
+  *,
+  *::before,
+  *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     LOGIN SCREEN
-===================================================== -->
-
-<div id="authScreen">
-
-  <div class="login-card">
-
-    <h2>Study Companion</h2>
-
-    <p class="login-subtitle">
-      Login to continue to your Study Companion.
-    </p>
-
-    <input
-      id="email"
-      class="login-input"
-      type="email"
-      placeholder="Email"
-      autocomplete="email"
-    >
-
-    <input
-      id="password"
-      class="login-input"
-      type="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    >
-
-    <button
-      id="loginBtn"
-      class="login-button"
-    >
-      Login
-    </button>
-
-    <button
-      id="signupBtn"
-      class="login-button"
-    >
-      Create Account
-    </button>
-
-    <p id="authMessage"></p>
-
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     MAIN WEBSITE
-     Hidden until Firebase confirms login
-===================================================== -->
+<!-- MAIN WEBSITE: NO LOGIN REQUIRED -->
 
 <div id="appContent">
 
   <div class="ruled">
-
     <div class="wrap">
 
       <header class="hero">
@@ -576,8 +470,7 @@ footer a{
           built for students who'd rather study than manage apps.
         </p>
 
-
-        <!-- DOWNLOAD -->
+        <!-- DOWNLOAD ANDROID APK -->
 
         <a
           class="download-card"
@@ -585,7 +478,6 @@ footer a{
         >
 
           <span class="download-icon">
-
             <svg
               width="20"
               height="20"
@@ -595,37 +487,24 @@ footer a{
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
-
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-
               <polyline points="7 10 12 15 17 10"></polyline>
-
               <line x1="12" y1="15" x2="12" y2="3"></line>
-
             </svg>
-
           </span>
 
           <span class="download-text">
-
-            <span class="title">
-              Download for Android
-            </span>
-
-            <span class="meta">
-              APK · 31.6 MB · v1.0
-            </span>
-
+            <span class="title">Download for Android</span>
+            <span class="meta">APK · 31.6 MB · v1.0</span>
           </span>
 
         </a>
 
-
         <br>
 
-
-        <!-- VISIT WEBSITE -->
+        <!-- VISIT STUDY COMPANION WEBSITE -->
 
         <a
           class="visit-card"
@@ -633,7 +512,6 @@ footer a{
         >
 
           <span class="download-icon">
-
             <svg
               width="20"
               height="20"
@@ -643,104 +521,76 @@ footer a{
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
-
               <circle cx="12" cy="12" r="10"></circle>
-
               <line x1="2" y1="12" x2="22" y2="12"></line>
-
               <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-
             </svg>
-
           </span>
 
           <span class="download-text">
-
-            <span class="title">
-              Visit the website
-            </span>
-
-            <span class="meta">
-              akhilnetha240512-cell.github.io/study-companion-app
-            </span>
-
+            <span class="title">Visit the website</span>
+            <span class="meta">akhilnetha240512-cell.github.io/study-companion-app</span>
           </span>
 
         </a>
 
-
         <p class="note">
-          Installs from outside the Play Store, so Android may ask
-          you to allow the installation the first time.
+          Installing the Android APK from outside the Play Store
+          may require permission from Android to install unknown apps.
+          Only install APK files from sources you trust.
         </p>
-
 
         <!-- AI SOLVER CODE -->
 
         <div class="code-note">
 
-          <div class="label">
-            Note
-          </div>
+          <div class="label">AI Solver</div>
 
           <div class="instruction">
-            In the app or on this site, paste this into the AI Solver:
+            In the app or on this site, paste this code into the AI Solver:
           </div>
 
           <div class="code-row">
 
-            <code id="solverCode">
-              AQ.Ab8RN6IqttZd-IGGQ74SDxcuS742sa5LN5uQ0P_ZKM2a8_aBKQ
-            </code>
+            <code id="solverCode">AQ.Ab8RN6IqttZd-IGGQ74SDxcuS742sa5LN5uQ0P_ZKM2a8_aBKQ</code>
 
             <button
               class="copy-btn"
               id="copyBtn"
-              onclick="copyCode()"
-            >
-              Copy
-            </button>
+              type="button"
+            >Copy</button>
 
           </div>
 
           <div class="warning">
-            ⚠ If you don't paste this code, your AI Solver will not work.
+            ⚠ Your AI Solver may require a valid API key or access code.
+            Never share private API keys publicly.
           </div>
 
         </div>
 
-
-        <!-- CREDIT -->
+        <!-- CREATOR CREDIT -->
 
         <div class="credit-box">
 
-          <span class="made">
-            Made with 💛 by
-          </span>
+          <span class="made">Made with 💛 by</span>
 
-          <span class="name">
-            Mr_Akhil_Netha 🚀
-          </span>
+          <span class="name">Mr_Akhil_Netha 🚀</span>
 
           <a
             href="https://instagram.com/itzzz_akhil_netha"
             target="_blank"
-            rel="noopener"
-          >
-
-            @itzzz_akhil_netha
-
-          </a>
+            rel="noopener noreferrer"
+          >@itzzz_akhil_netha</a>
 
         </div>
 
       </header>
 
     </div>
-
   </div>
-
 
   <!-- FEATURES -->
 
@@ -748,57 +598,37 @@ footer a{
 
     <section class="features">
 
-      <div class="tab">
-        What's inside
-      </div>
+      <div class="tab">What's inside</div>
 
       <div class="margin-list">
 
         <div class="margin-item">
-
-          <h3>
-            Assignment tracker
-          </h3>
-
+          <h3>Assignment tracker</h3>
           <p>
             Every assignment and deadline in one running list,
             sorted by what's due soonest.
           </p>
-
         </div>
 
-
         <div class="margin-item">
-
-          <h3>
-            Focus timer
-          </h3>
-
+          <h3>Focus timer</h3>
           <p>
             A simple timed study session, so you know exactly
             how long you actually studied.
           </p>
-
         </div>
 
-
         <div class="margin-item">
-
-          <h3>
-            Notes, kept close
-          </h3>
-
+          <h3>Notes, kept close</h3>
           <p>
             Quick notes tied to the subject they belong to,
             so nothing is buried three folders deep.
           </p>
-
         </div>
 
       </div>
 
     </section>
-
 
     <!-- FOOTER -->
 
@@ -811,10 +641,8 @@ footer a{
       <a
         href="https://github.com/akhilnetha240512-cell/study-companion-app"
         target="_blank"
-        rel="noopener"
-      >
-        View on GitHub
-      </a>
+        rel="noopener noreferrer"
+      >View on GitHub</a>
 
     </footer>
 
@@ -822,444 +650,48 @@ footer a{
 
 </div>
 
-
-<!-- =====================================================
-     COPY CODE
-===================================================== -->
+<!-- COPY AI SOLVER CODE -->
 
 <script>
-
-function copyCode(){
-
-  const text =
-    document.getElementById("solverCode").textContent.trim();
-
-  const btn =
-    document.getElementById("copyBtn");
-
-  navigator.clipboard.writeText(text)
-    .then(function(){
-
-      btn.textContent = "Copied";
-
-      btn.classList.add("copied");
-
-      setTimeout(function(){
-
-        btn.textContent = "Copy";
-
-        btn.classList.remove("copied");
-
-      },1800);
-
-    })
-    .catch(function(){
-
-      btn.textContent = "Copy failed";
-
-      setTimeout(function(){
-
-        btn.textContent = "Copy";
-
-      },1800);
-
-    });
-
-}
-
-</script>
-
-
-<!-- =====================================================
-     FIREBASE
-===================================================== -->
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-
-import {
-  getFirestore
-}
-from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
-
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-}
-from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-
-
-// =====================================================
-// FIREBASE CONFIG
-// =====================================================
-
-const firebaseConfig = {
-  apiKey: "AIzaSyComsLAcTISsLWB00WxaaRg3nmyCdZlcYw",
-  authDomain: "study-companion-app-70518.firebaseapp.com",
-  databaseURL: "https://study-companion-app-70518-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "study-companion-app-70518",
-  storageBucket: "study-companion-app-70518.firebasestorage.app",
-  messagingSenderId: "1045381685642",
-  appId: "1:1045381685642:web:49db0fae837cacc46b6873",
-  measurementId: "G-PXC6BL67VL"
-};
-
-
-// =====================================================
-// INITIALIZE FIREBASE
-// =====================================================
-
-const app =
-  initializeApp(firebaseConfig);
-
-const db =
-  getFirestore(app);
-
-const auth =
-  getAuth(app);
-
-
-// Make available globally
-
-window.studyDB = db;
-
-window.studyAuth = {
-
-  auth,
-
-  createUserWithEmailAndPassword,
-
-  signInWithEmailAndPassword,
-
-  onAuthStateChanged,
-
-  signOut
-
-};
-
-
-// =====================================================
-// ELEMENTS
-// =====================================================
-
-const authScreen =
-  document.getElementById("authScreen");
-
-const appContent =
-  document.getElementById("appContent");
-
-const loginBtn =
-  document.getElementById("loginBtn");
-
-const signupBtn =
-  document.getElementById("signupBtn");
-
-const emailInput =
-  document.getElementById("email");
-
-const passwordInput =
-  document.getElementById("password");
-
-const message =
-  document.getElementById("authMessage");
-
-
-// =====================================================
-// MESSAGE
-// =====================================================
-
-function showMessage(text){
-
-  message.textContent = text;
-
-}
-
-
-// =====================================================
-// LOGIN
-// =====================================================
-
-loginBtn.addEventListener("click", async function(){
-
-  const email =
-    emailInput.value.trim();
-
-  const password =
-    passwordInput.value;
-
-
-  if(!email || !password){
-
-    showMessage(
-      "Please enter your email and password."
-    );
-
-    return;
-
-  }
-
-
-  loginBtn.disabled = true;
-
-  loginBtn.textContent = "Logging in...";
-
-
-  try{
-
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    showMessage(
-      "Login successful!"
-    );
-
-  }
-
-  catch(error){
-
-    console.error(
-      "Login error:",
-      error
-    );
-
-
-    if(error.code === "auth/invalid-credential"){
-
-      showMessage(
-        "Incorrect email or password."
-      );
-
+(function () {
+  const button = document.getElementById("copyBtn");
+  const code = document.getElementById("solverCode");
+
+  button.addEventListener("click", async function () {
+    const text = code.textContent.trim();
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.left = "-9999px";
+        document.body.appendChild(area);
+        area.select();
+
+        const copied = document.execCommand("copy");
+        area.remove();
+
+        if (!copied) {
+          throw new Error("Copy failed");
+        }
+      }
+
+      button.textContent = "Copied!";
+      button.classList.add("copied");
+
+    } catch (error) {
+      button.textContent = "Copy failed";
     }
 
-    else if(error.code === "auth/user-not-found"){
-
-      showMessage(
-        "No account was found with this email."
-      );
-
-    }
-
-    else if(error.code === "auth/wrong-password"){
-
-      showMessage(
-        "Incorrect password."
-      );
-
-    }
-
-    else if(error.code === "auth/operation-not-allowed"){
-
-      showMessage(
-        "Email/Password login is not enabled in Firebase."
-      );
-
-    }
-
-    else{
-
-      showMessage(
-        "Login failed: " + error.message
-      );
-
-    }
-
-  }
-
-  finally{
-
-    loginBtn.disabled = false;
-
-    loginBtn.textContent = "Login";
-
-  }
-
-});
-
-
-// =====================================================
-// CREATE ACCOUNT
-// =====================================================
-
-signupBtn.addEventListener("click", async function(){
-
-  const email =
-    emailInput.value.trim();
-
-  const password =
-    passwordInput.value;
-
-
-  if(!email || !password){
-
-    showMessage(
-      "Please enter your email and password."
-    );
-
-    return;
-
-  }
-
-
-  if(password.length < 6){
-
-    showMessage(
-      "Password must be at least 6 characters."
-    );
-
-    return;
-
-  }
-
-
-  signupBtn.disabled = true;
-
-  signupBtn.textContent = "Creating account...";
-
-
-  try{
-
-    await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-
-    showMessage(
-      "Account created successfully!"
-    );
-
-  }
-
-  catch(error){
-
-    console.error(
-      "Signup error:",
-      error
-    );
-
-
-    if(error.code === "auth/email-already-in-use"){
-
-      showMessage(
-        "This email already has an account. Please Login."
-      );
-
-    }
-
-    else if(error.code === "auth/invalid-email"){
-
-      showMessage(
-        "Please enter a valid email address."
-      );
-
-    }
-
-    else if(error.code === "auth/weak-password"){
-
-      showMessage(
-        "Please choose a stronger password."
-      );
-
-    }
-
-    else{
-
-      showMessage(
-        "Account creation failed: " + error.message
-      );
-
-    }
-
-  }
-
-  finally{
-
-    signupBtn.disabled = false;
-
-    signupBtn.textContent = "Create Account";
-
-  }
-
-});
-
-
-// =====================================================
-// AUTH STATE
-// =====================================================
-
-onAuthStateChanged(
-  auth,
-  function(user){
-
-    if(user){
-
-      // USER IS LOGGED IN
-
-      console.log(
-        "Logged in:",
-        user.email
-      );
-
-      console.log(
-        "User ID:",
-        user.uid
-      );
-
-
-      authScreen.style.display =
-        "none";
-
-      appContent.style.display =
-        "block";
-
-    }
-
-    else{
-
-      // USER IS NOT LOGGED IN
-
-      console.log(
-        "No user logged in."
-      );
-
-
-      authScreen.style.display =
-        "flex";
-
-      appContent.style.display =
-        "none";
-
-    }
-
-  }
-);
-
-
-// =====================================================
-// FIREBASE STATUS
-// =====================================================
-
-console.log(
-  "Firebase connected!"
-);
-
-console.log(
-  "Firestore connected!"
-);
-
-console.log(
-  "Authentication connected!"
-);
-
+    setTimeout(function () {
+      button.textContent = "Copy";
+      button.classList.remove("copied");
+    }, 1800);
+  });
+})();
 </script>
 
 </body>
